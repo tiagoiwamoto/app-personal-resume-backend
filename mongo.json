@@ -1,0 +1,7 @@
+db.updateUser(
+"admin",
+{
+pwd: "dc9fb417-117a-464a-a4e0-0516a806d261",
+roles: [ { role: "readWrite", db: "personal-resume" } ]
+}
+)
