@@ -1,6 +1,6 @@
 package io.github.tiagoiwamoto.apppersonalresumebackend.config;
 
-import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.cursocategoria.CursoCategoriaCriacaoException;
+import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.categoria.CategoriaCriacaoException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.DataResponse;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Slf4j
 public class AppExceptionHandler {
 
-    @ExceptionHandler(CursoCategoriaCriacaoException.class)
-    public ResponseEntity<DataResponse<ErrorResponse>> tratarCursoCategoriaCriacaoException(CursoCategoriaCriacaoException ex) {
+    @ExceptionHandler(CategoriaCriacaoException.class)
+    public ResponseEntity<DataResponse<ErrorResponse>> tratarCursoCategoriaCriacaoException(CategoriaCriacaoException ex) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         var errorResponse = ErrorResponse.builder()
                 .codigo(ex.getCode())
