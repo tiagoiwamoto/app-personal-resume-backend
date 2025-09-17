@@ -69,8 +69,8 @@ public class CategoriaUsecase {
         return registros;
     }
 
-    public void deletarCategoria(final CategoriaRequest request){
-        var entidade = adapter.recuperarCategoriaPorNome(request.nome())
+    public void deletarCategoria(final Long id){
+        var entidade = adapter.recuperarCategoriaPorId(id)
                 .orElseThrow(() -> new CategoriaNaoExistenteException());
         adapter.solicitarQueCategoriaSejaRemovida(entidade);
         log.info("Categoria {} foi removida com sucesso.", entidade);

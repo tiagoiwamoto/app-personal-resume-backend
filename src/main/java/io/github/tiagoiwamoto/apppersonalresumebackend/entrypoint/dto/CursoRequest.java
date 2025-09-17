@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record CursoRequest(
         Long id,
         String uuid,

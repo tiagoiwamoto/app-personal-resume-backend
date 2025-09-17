@@ -1,8 +1,8 @@
 package io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint;
 
-import io.github.tiagoiwamoto.apppersonalresumebackend.core.usecase.CategoriaUsecase;
-import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CategoriaRequest;
-import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CategoriaResponse;
+import io.github.tiagoiwamoto.apppersonalresumebackend.core.usecase.CertificacaoUsecase;
+import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CertificacaoRequest;
+import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CertificacaoResponse;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.DataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,78 +22,79 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "/categorias")
+@RequestMapping(path = "/certificacoes")
 @RequiredArgsConstructor
 @Slf4j
-public class CategoriaRest {
+public class CertificacaoRest {
 
-    private final CategoriaUsecase usecase;
+    private final CertificacaoUsecase usecase;
 
     @PostMapping
-    public ResponseEntity<DataResponse<CategoriaResponse>> criar(@RequestBody CategoriaRequest request,
-                                                                 @RequestHeader Map<String, String> headers) {
-        log.info("Informações recebidas para criação de uma categoria de curso. body: {}, headers: {}", request, headers);
+    public ResponseEntity<DataResponse<CertificacaoResponse>> criar(@RequestBody CertificacaoRequest request,
+                                                                    @RequestHeader Map<String, String> headers) {
+        log.info("Informações recebidas para criação de uma certificação. body: {}, headers: {}", request, headers);
 
-        var response = usecase.criarNovaCategoria(request);
+        var response = usecase.cadastrarCertificacao(request, headers);
 
         return ResponseEntity
                 .created(URI.create("/cursos/categorias/"))
                 .body(
-                        DataResponse.<CategoriaResponse>builder()
+                        DataResponse.<CertificacaoResponse>builder()
                                 .data(response)
                                 .build()
                 );
     }
 
     @PutMapping
-    public ResponseEntity<DataResponse<CategoriaResponse>> atualizar(@RequestBody CategoriaRequest request,
+    public ResponseEntity<DataResponse<CertificacaoResponse>> atualizar(@RequestBody CertificacaoRequest request,
                                                                      @RequestHeader Map<String, String> headers) {
-        log.info("Informações recebidas para atualização de uma categoria de curso. body: {}, headers: {}", request, headers);
+        log.info("Informações recebidas para atualização de uma certificação. body: {}, headers: {}", request, headers);
 
-        var response = usecase.editarCategoria(request);
+        var response = usecase.alterarCertificacao(request, headers);
 
         return ResponseEntity
                 .ok(
-                    DataResponse.<CategoriaResponse>builder()
+                    DataResponse.<CertificacaoResponse>builder()
                             .data(response)
                             .build()
                 );
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<DataResponse<CategoriaResponse>> atualizar(@PathVariable(name = "id") Long id,
+    public ResponseEntity<DataResponse<CertificacaoResponse>> recuperarCertificacao(@PathVariable(name = "id") Long id,
                                                                      @RequestHeader Map<String, String> headers) {
-        log.info("Informações recebidas para recuperação de uma categoria de curso. id: {}, headers: {}", id, headers);
+        log.info("Informações recebidas para recuperação de uma certificação. id: {}, headers: {}", id, headers);
 
-        var response = usecase.recuperarCategoriaPeloId(id);
+        var response = usecase.recuperarCertificacao(id, headers);
 
         return ResponseEntity
                 .ok(
-                    DataResponse.<CategoriaResponse>builder()
+                    DataResponse.<CertificacaoResponse>builder()
                             .data(response)
                             .build()
                 );
     }
 
     @GetMapping
-    public ResponseEntity<DataResponse<List<CategoriaResponse>>> listarCategorias(@RequestHeader Map<String, String> headers) {
-        log.info("Recuperar todas as categorias, headers: {}", headers);
+    public ResponseEntity<DataResponse<List<CertificacaoResponse>>> listarCategorias(@RequestHeader Map<String, String> headers) {
+        log.info("Recuperar todas as certificações, headers: {}", headers);
 
-        var response = usecase.recuperarTodasCategoria();
+        var response = usecase.recuperarTodasCertificacoes();
 
         return ResponseEntity
                 .ok(
-                    DataResponse.<List<CategoriaResponse>>builder()
+                    DataResponse.<List<CertificacaoResponse>>builder()
                             .data(response)
-                            .build());
+                            .build()
+                );
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity removerCategoria(@RequestHeader Map<String, String> headers,
                                            @PathVariable(name = "id") Long id) {
-        log.info("Deletar categoria {}, headers: {}", id, headers);
+        log.info("Deletar certificação {}, headers: {}", id, headers);
 
-        usecase.deletarCategoria(id);
+        usecase.removerCertificacao(id);
 
         return ResponseEntity.accepted().build();
     }

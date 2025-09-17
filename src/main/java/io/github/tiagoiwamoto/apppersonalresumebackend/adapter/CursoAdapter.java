@@ -54,7 +54,7 @@ public class CursoAdapter {
         }
     }
 
-    public List<CursoEntity> recuperarTodasCursos(){
+    public List<CursoEntity> recuperarTodosCursos(){
         try {
             var registros = repository.findAll();
             return registros;

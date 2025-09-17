@@ -1,11 +1,11 @@
 package io.github.tiagoiwamoto.apppersonalresumebackend.core.usecase;
 
+import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CategoriaAdapter;
 import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CertificadoImagemAdapter;
 import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CursoAdapter;
-import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CategoriaAdapter;
-import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.curso.CursoNaoExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.categoria.CategoriaJaExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.categoria.CategoriaNaoExistenteException;
+import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.curso.CursoNaoExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.mapper.CursoMapper;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CategoriaResponse;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CursoRequest;
@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -50,9 +51,13 @@ public class CursoUsecase {
         return CursoResponse.builder()
                 .id(cursoGravado.getId())
                 .nome(cursoGravado.getNome())
+                .descricao(cursoGravado.getDescricao())
                 .uuid(cursoGravado.getUuid())
-                .escola(cursoGravado.getEscola())
-                .categoria(CategoriaResponse.builder().id(cursoGravado.getCategoria().getId()).build())
+                .escola(cursoGravado.getEscola().getNome())
+                .categoria(CategoriaResponse.builder()
+                        .id(cursoGravado.getCategoria().getId())
+                        .nome(cursoGravado.getCategoria().getNome())
+                        .build())
                 .dataInicio(cursoGravado.getDataInicio())
                 .dataFim(cursoGravado.getDataFim())
                 .duracaoHoras(cursoGravado.getDuracaoHoras())
@@ -94,9 +99,13 @@ public class CursoUsecase {
         return CursoResponse.builder()
                 .id(cursoGravado.getId())
                 .nome(cursoGravado.getNome())
+                .descricao(cursoGravado.getDescricao())
                 .uuid(cursoGravado.getUuid())
-                .escola(cursoGravado.getEscola())
-                .categoria(CategoriaResponse.builder().id(cursoGravado.getCategoria().getId()).build())
+                .escola(cursoGravado.getEscola().getNome())
+                .categoria(CategoriaResponse.builder()
+                        .id(cursoGravado.getCategoria().getId())
+                        .nome(cursoGravado.getCategoria().getNome())
+                        .build())
                 .dataInicio(cursoGravado.getDataInicio())
                 .dataFim(cursoGravado.getDataFim())
                 .duracaoHoras(cursoGravado.getDuracaoHoras())
@@ -105,12 +114,33 @@ public class CursoUsecase {
                 .build();
     }
 
-    public void removerCursoConcluido(final Long id, final Map<String, String> headers){
+    public void removerCursoConcluido(final Long id){
         var cursoEntity = adapter.recuperarCursoPorId(id)
                 .orElseThrow(() -> new CursoNaoExistenteException());
         certificadoImagemAdapter.solicitarRemocaoCertificado(cursoEntity.getPathCertificado(),
                 cursoEntity.getPathMiniaturaCertificado());
         adapter.solicitarQueCursoSejaRemovida(cursoEntity);
+    }
+
+    public List<CursoResponse> recuperarTodosCursosConcluidos(){
+        var cursos = adapter.recuperarTodosCursos();
+        return cursos.stream().map(c -> CursoResponse.builder()
+                .id(c.getId())
+                .nome(c.getNome())
+                .descricao(c.getDescricao())
+                .uuid(c.getUuid())
+                .escola(c.getEscola().getNome())
+                .categoria(CategoriaResponse.builder()
+                        .id(c.getCategoria().getId())
+                        .nome(c.getCategoria().getNome())
+                        .build())
+                .dataInicio(c.getDataInicio())
+                .dataFim(c.getDataFim())
+                .duracaoHoras(c.getDuracaoHoras())
+                .certificadoUrl(c.getPathCertificado())
+                .miniaturaCertificadoUrl(c.getPathMiniaturaCertificado())
+                .timestamp(c.getTimestamp())
+                .build()).toList();
     }
 
 }

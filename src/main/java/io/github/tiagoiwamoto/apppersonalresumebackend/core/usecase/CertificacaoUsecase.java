@@ -3,8 +3,9 @@ package io.github.tiagoiwamoto.apppersonalresumebackend.core.usecase;
 import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CategoriaAdapter;
 import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CertificacaoAdapter;
 import io.github.tiagoiwamoto.apppersonalresumebackend.adapter.CertificadoImagemAdapter;
-import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.categoria.CategoriaJaExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.categoria.CategoriaNaoExistenteException;
+import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.certificacao.CertificacaoJaExistenteException;
+import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.certificacao.CertificacaoNaoExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.error.curso.CursoNaoExistenteException;
 import io.github.tiagoiwamoto.apppersonalresumebackend.core.mapper.CertificacaoMapper;
 import io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto.CategoriaResponse;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,12 +29,12 @@ public class CertificacaoUsecase {
     private final CategoriaAdapter cursoCategoriaAdapter;
     private final static String CERTIFICACOES = "certificacoes";
 
-    public CertificacaoResponse cadastrarCursoConcluido(final CertificacaoRequest request,
-                                                        final Map<String, String> headers){
+    public CertificacaoResponse cadastrarCertificacao(final CertificacaoRequest request,
+                                                      final Map<String, String> headers){
 
         adapter.recuperarCertificadoPorNome(request.nome()).ifPresent(c -> {
-            log.info("Curso já existe, não será possível cadastrar com o mesmo nome. Curso: {}, request recebido {}", c, request);
-            throw new CategoriaJaExistenteException();
+            log.info("Certificação já existe, não será possível cadastrar com o mesmo nome. Certificação: {}, request recebido {}", c, request);
+            throw new CertificacaoJaExistenteException();
         });
 
         var categoria = cursoCategoriaAdapter.recuperarCategoriaPorId(
@@ -60,11 +62,11 @@ public class CertificacaoUsecase {
                 .build();
     }
 
-    public CertificacaoResponse alterarCursoConcluido(final CertificacaoRequest request,
-                                               final Map<String, String> headers) {
+    public CertificacaoResponse alterarCertificacao(final CertificacaoRequest request,
+                                                    final Map<String, String> headers) {
 
         var certificacaoEntity = adapter.recuperarCertificadoPorId(request.id())
-                .orElseThrow(() -> new CursoNaoExistenteException());
+                .orElseThrow(() -> new CertificacaoNaoExistenteException());
 
 
         certificacaoEntity.setNome(request.nome());
@@ -99,7 +101,40 @@ public class CertificacaoUsecase {
                 .build();
     }
 
-    public void removerCursoConcluido(final Long id, final Map<String, String> headers){
+    public CertificacaoResponse recuperarCertificacao(final Long id, final Map<String, String> headers){
+        var cursoEntity = adapter.recuperarCertificadoPorId(id)
+                .orElseThrow(() -> new CertificacaoNaoExistenteException());
+        return CertificacaoResponse.builder()
+                .id(cursoEntity.getId())
+                .nome(cursoEntity.getNome())
+                .uuid(cursoEntity.getUuid())
+                .categoria(CategoriaResponse.builder().id(cursoEntity.getCategoria().getId()).build())
+                .dataEmissao(cursoEntity.getDataEmissao())
+                .dataExpiracao(cursoEntity.getDataExpiracao())
+                .pathCertificado(cursoEntity.getPathCertificado())
+                .pathMiniaturaCertificado(cursoEntity.getPathMiniaturaCertificado())
+                .timestamp(cursoEntity.getTimestamp())
+                .build();
+    }
+
+    public List<CertificacaoResponse> recuperarTodasCertificacoes(){
+        return adapter.recuperarTodasCertificados()
+                .stream()
+                .map(cursoEntity -> CertificacaoResponse.builder()
+                        .id(cursoEntity.getId())
+                        .nome(cursoEntity.getNome())
+                        .uuid(cursoEntity.getUuid())
+                        .categoria(CategoriaResponse.builder().id(cursoEntity.getCategoria().getId()).build())
+                        .dataEmissao(cursoEntity.getDataEmissao())
+                        .dataExpiracao(cursoEntity.getDataExpiracao())
+                        .pathCertificado(cursoEntity.getPathCertificado())
+                        .pathMiniaturaCertificado(cursoEntity.getPathMiniaturaCertificado())
+                        .timestamp(cursoEntity.getTimestamp())
+                        .build())
+                .toList();
+    }
+
+    public void removerCertificacao(final Long id){
         var cursoEntity = adapter.recuperarCertificadoPorId(id)
                 .orElseThrow(() -> new CursoNaoExistenteException());
         certificadoImagemAdapter.solicitarRemocaoCertificado(cursoEntity.getPathCertificado(),

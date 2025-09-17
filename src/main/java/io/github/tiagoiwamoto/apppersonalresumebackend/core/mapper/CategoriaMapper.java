@@ -15,7 +15,7 @@ public class CategoriaMapper {
         var entity = CategoriaEntity.builder()
                 .dataCriacao(LocalDateTime.now())
                 .nome(request.nome())
-                .descricao(request.descricacao()) //TODO: integrar com chat gpt para criar descrições automáticas
+                .descricao(request.descricao()) //TODO: integrar com chat gpt para criar descrições automáticas
                 .build();
         return entity;
     }

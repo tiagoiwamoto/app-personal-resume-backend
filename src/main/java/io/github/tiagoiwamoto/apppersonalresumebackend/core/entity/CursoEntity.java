@@ -3,7 +3,6 @@ package io.github.tiagoiwamoto.apppersonalresumebackend.core.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,7 +42,7 @@ public class CursoEntity {
     private String pathCertificado;
     private String pathMiniaturaCertificado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "categoria_id")
     private CategoriaEntity categoria;
 }

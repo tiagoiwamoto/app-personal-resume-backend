@@ -25,9 +25,18 @@ public class CertificadoImagemAdapter {
         String nomeUuid = UUID.randomUUID().toString();
 
         File arquivoCertificado = new File(System.getProperty("user.dir")
+                .concat(File.separator)
+                .concat("files")
                 .concat(File.separator).concat(path).concat(File.separator).concat(nomeUuid).concat(".png"));
 
+        var pathCertificado = "files".concat(File.separator)
+                .concat(path)
+                .concat(File.separator)
+                .concat(nomeUuid);
+
         File arquivoMiniaturaCertificado = new File(System.getProperty("user.dir")
+                .concat(File.separator)
+                .concat("files")
                 .concat(File.separator).concat(path).concat(File.separator).concat(nomeUuid).concat("_thumb").concat(".png"));
 
         File pastaCertificado = arquivoCertificado.getParentFile();
@@ -53,12 +62,12 @@ public class CertificadoImagemAdapter {
 
                 ImageIO.write(miniaturaBuffered, "png", arquivoMiniaturaCertificado);
 
-                minioAdapter.enviarArquivo(arquivoCertificado, arquivoMiniaturaCertificado);
+//                minioAdapter.enviarArquivo(arquivoCertificado, arquivoMiniaturaCertificado);
 
                 return CertificadoResponse.builder()
                         .nomeArquivoOriginal(nomeOriginal)
-                        .caminhoCertificado(arquivoCertificado.getAbsolutePath())
-                        .caminhoMiniaturaCertificado(arquivoMiniaturaCertificado.getAbsolutePath())
+                        .caminhoCertificado(pathCertificado.concat(".png"))
+                        .caminhoMiniaturaCertificado(pathCertificado.concat("_thumb").concat(".png"))
                         .tamanhoCertificadoBytes(arquivoCertificado.length())
                         .tamanhoMiniaturaCertificadoBytes(arquivoMiniaturaCertificado.length())
                         .build();
@@ -94,7 +103,7 @@ public class CertificadoImagemAdapter {
         if (miniatura.exists()) {
             miniatura.delete();
         }
-        minioAdapter.removerArquivo(pathCertificado, pathMiniaturaCertificado);
+//        minioAdapter.removerArquivo(pathCertificado, pathMiniaturaCertificado);
     }
 
 }

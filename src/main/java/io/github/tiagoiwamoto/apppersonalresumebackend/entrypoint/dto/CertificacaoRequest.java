@@ -3,7 +3,6 @@ package io.github.tiagoiwamoto.apppersonalresumebackend.entrypoint.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.tiagoiwamoto.apppersonalresumebackend.core.entity.EscolaEnum;
 import lombok.Builder;
 import org.springframework.http.codec.multipart.FilePart;
 
