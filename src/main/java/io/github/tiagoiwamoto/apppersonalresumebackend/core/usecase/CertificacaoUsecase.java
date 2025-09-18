@@ -52,8 +52,12 @@ public class CertificacaoUsecase {
         return CertificacaoResponse.builder()
                 .id(cursoGravado.getId())
                 .nome(cursoGravado.getNome())
+                .descricao(cursoGravado.getDescricao())
                 .uuid(cursoGravado.getUuid())
-                .categoria(CategoriaResponse.builder().id(cursoGravado.getCategoria().getId()).build())
+                .categoria(CategoriaResponse.builder()
+                        .id(cursoGravado.getCategoria().getId())
+                        .nome(cursoGravado.getNome())
+                        .build())
                 .dataEmissao(cursoGravado.getDataEmissao())
                 .dataExpiracao(cursoGravado.getDataExpiracao())
                 .pathCertificado(certificadoResponse.block().caminhoCertificado())
@@ -70,6 +74,7 @@ public class CertificacaoUsecase {
 
 
         certificacaoEntity.setNome(request.nome());
+        certificacaoEntity.setDescricao(request.descricao());
         certificacaoEntity.setCategoria(cursoCategoriaAdapter.recuperarCategoriaPorId(
                 request.categoriaId()).orElseThrow(() -> new CategoriaNaoExistenteException()));
         certificacaoEntity.setDataEmissao(request.dataEmissao());
@@ -92,6 +97,7 @@ public class CertificacaoUsecase {
         return CertificacaoResponse.builder()
                 .id(cursoGravado.getId())
                 .nome(cursoGravado.getNome())
+                .nome(cursoGravado.getDescricao())
                 .uuid(cursoGravado.getUuid())
                 .categoria(CategoriaResponse.builder().id(cursoGravado.getCategoria().getId()).build())
                 .dataEmissao(cursoGravado.getDataEmissao())
@@ -107,8 +113,12 @@ public class CertificacaoUsecase {
         return CertificacaoResponse.builder()
                 .id(cursoEntity.getId())
                 .nome(cursoEntity.getNome())
+                .descricao(cursoEntity.getDescricao())
                 .uuid(cursoEntity.getUuid())
-                .categoria(CategoriaResponse.builder().id(cursoEntity.getCategoria().getId()).build())
+                .categoria(CategoriaResponse.builder()
+                        .id(cursoEntity.getCategoria().getId())
+                        .nome(cursoEntity.getCategoria().getNome())
+                        .build())
                 .dataEmissao(cursoEntity.getDataEmissao())
                 .dataExpiracao(cursoEntity.getDataExpiracao())
                 .pathCertificado(cursoEntity.getPathCertificado())
@@ -123,8 +133,12 @@ public class CertificacaoUsecase {
                 .map(cursoEntity -> CertificacaoResponse.builder()
                         .id(cursoEntity.getId())
                         .nome(cursoEntity.getNome())
+                        .descricao(cursoEntity.getDescricao())
                         .uuid(cursoEntity.getUuid())
-                        .categoria(CategoriaResponse.builder().id(cursoEntity.getCategoria().getId()).build())
+                        .categoria(CategoriaResponse.builder()
+                                .id(cursoEntity.getCategoria().getId())
+                                .nome(cursoEntity.getCategoria().getNome())
+                                .build())
                         .dataEmissao(cursoEntity.getDataEmissao())
                         .dataExpiracao(cursoEntity.getDataExpiracao())
                         .pathCertificado(cursoEntity.getPathCertificado())

@@ -30,7 +30,7 @@ public class CertificacaoRest {
     private final CertificacaoUsecase usecase;
 
     @PostMapping
-    public ResponseEntity<DataResponse<CertificacaoResponse>> criar(@RequestBody CertificacaoRequest request,
+    public ResponseEntity<DataResponse<CertificacaoResponse>> criar(CertificacaoRequest request,
                                                                     @RequestHeader Map<String, String> headers) {
         log.info("Informações recebidas para criação de uma certificação. body: {}, headers: {}", request, headers);
 
@@ -46,7 +46,7 @@ public class CertificacaoRest {
     }
 
     @PutMapping
-    public ResponseEntity<DataResponse<CertificacaoResponse>> atualizar(@RequestBody CertificacaoRequest request,
+    public ResponseEntity<DataResponse<CertificacaoResponse>> atualizar(CertificacaoRequest request,
                                                                      @RequestHeader Map<String, String> headers) {
         log.info("Informações recebidas para atualização de uma certificação. body: {}, headers: {}", request, headers);
 
